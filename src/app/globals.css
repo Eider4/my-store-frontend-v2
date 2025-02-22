@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body,
+html {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  font-size: 16px;
+}
+
+@font-face {
+  font-family: rollergirls;
+  src: url(../assets/caligrafias/rollergirls/ROLLERGI.TTF);
+}
+
+@font-face {
+  font-family: ExtraLight;
+  src: url(../assets/caligrafias/nexa/Nexa-ExtraLight.ttf);
+}
+
+@font-face {
+  font-family: ExtraLightNegrita;
+  src: url(../assets/caligrafias/nexa/Nexa-Heavy.ttf);
+}
+
+p {
+  font-family: ExtraLight;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span {
+  font-family: ExtraLightNegrita;
+}
+
+.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.scrollbar-color-none {
+  scrollbar-color: transparent transparent;
+}
+
+.swiper {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -150px;
+  margin-top: -150px;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+}
+
+#app {
+  height: 100%
+}
