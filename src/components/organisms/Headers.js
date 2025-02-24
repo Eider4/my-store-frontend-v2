@@ -109,10 +109,12 @@ const HeaderComponent = () => {
           />
           {isUserLoggedIn ? (
             <>
-              <BsFileEarmarkText
-                size={22}
-                className="text-gray-700 hover:text-cyan-500 cursor-pointer"
-              />
+              <Link href="/finally-sale">
+                <BsFileEarmarkText
+                  size={22}
+                  className="text-gray-700 hover:text-cyan-500 cursor-pointer"
+                />
+              </Link>
               <Link href="/add-products">
                 <MdOutlineAddBusiness
                   size={28}

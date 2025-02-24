@@ -11,6 +11,7 @@ import {
   deleteProductsAllInCart,
   updateProductInCart,
 } from "@/service/cart/cart.service";
+import Link from "next/link";
 
 export default function ModalProductsCart({
   isOpen,
@@ -206,9 +207,14 @@ export default function ModalProductsCart({
                   </p>
                 </div>
                 <div className="mt-3 flex gap-2">
-                  <button className="w-32 py-2 text-white bg-cyan-500 rounded-md text-sm font-medium transition-all hover:bg-cyan-600 shadow-md md:w-40 md:text-lg">
-                    Finalizar Compra
-                  </button>
+                  <Link href="/finally-sale">
+                    <button
+                      onClick={() => setIsModalOpen(false)}
+                      className="w-32 py-2 text-white bg-cyan-500 rounded-md text-sm font-medium transition-all hover:bg-cyan-600 shadow-md md:w-40 md:text-lg"
+                    >
+                      Finalizar Compra
+                    </button>
+                  </Link>
                   <button
                     onClick={handleClearCart}
                     className="w-32 py-2 text-cyan-500 bg-gray-100 border border-cyan-500 rounded-md text-sm font-medium transition-all hover:bg-gray-200 shadow-md md:w-40 md:text-lg"

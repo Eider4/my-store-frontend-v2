@@ -101,3 +101,11 @@ export const getUserLocalStorageAndSessionStorage = async () => {
     return null;
   }
 };
+export const getUserById = async (id) => {
+  const response = await axios.get(`${API_URL}/user/get-user/${id}`);
+  return response.data;
+};
+export const updateUser = async (userData) => {
+  const response = await axios.put(`${API_URL}/user/update`, userData);
+  return response.data;
+};

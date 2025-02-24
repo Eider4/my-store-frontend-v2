@@ -170,7 +170,7 @@ const ProductCard = ({ product }) => {
           </p>
         </div>
         {/* Botón de carrito */}
-        <div className="flex flex-col sm:flex-row gap-2 mb-4">
+        <div className="flex flex-col sm:flex-row gap-2 mb-4 z-20">
           <button
             className="bg-cyan-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-700"
             onClick={handleAddToCart}
@@ -199,7 +199,7 @@ const ProductCard = ({ product }) => {
             <FaHeart className="mr-2" /> Me gusta
           </button>
           <Link href={`/add-products/${product.id_product}`}>
-            <button className="bg-cyan-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-700">
+            <button className="bg-cyan-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-700 cursor-pointer">
               Modificar
             </button>
           </Link>

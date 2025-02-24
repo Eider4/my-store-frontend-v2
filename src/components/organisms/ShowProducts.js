@@ -31,7 +31,7 @@ const ShowProducts = () => {
     return <div>Error al cargar productos</div>;
   }
   return (
-    <div className="flex flex-wrap gap-4 mt-8 justify-center">
+    <div className="flex flex-wrap gap-4 mt-8 justify-center md:mx-[15vw]">
       {products?.map((product) => (
         <ProductCardSmall product={product} key={product.id_product} />
       ))}
