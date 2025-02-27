@@ -36,7 +36,7 @@ const HeaderComponent = () => {
       setIsUserLoggedIn(user?.id_user || null);
     };
     fetchUser();
-  }, []);
+  }, [pathname]);
 
   return (
     <header className="bg-white shadow-md max-w-[99vw] w-full fixed top-0 left-0 z-50">
@@ -121,23 +121,25 @@ const HeaderComponent = () => {
                   className="text-gray-700 hover:text-cyan-500 cursor-pointer"
                 />
               </Link>
-              <div className="relative ">
-                <div onClick={() => setIsModalOpen(!isModalOpen)}>
-                  <span className="absolute -top-[2px] -right-[3px]">
-                    <FaCircle size={13} className="text-red-500" />
-                  </span>
-                  <p
-                    style={{ fontSize: "8px" }}
-                    className="absolute  -top-[1.31px] right-[0.4px] text-white"
-                  >
-                    {productsIncart.length}
-                  </p>
-                  <BsCart4
-                    size={27}
-                    className="text-gray-700 hover:text-cyan-600 cursor-pointer -ml-2 mb-[3px]"
-                  />
+              {productsIncart.length > 0 && (
+                <div className="relative ">
+                  <div onClick={() => setIsModalOpen(!isModalOpen)}>
+                    <span className="absolute -top-[2px] -right-[3px]">
+                      <FaCircle size={13} className="text-red-500" />
+                    </span>
+                    <p
+                      style={{ fontSize: "8px" }}
+                      className="absolute  -top-[1.31px] right-[0.4px] text-white"
+                    >
+                      {productsIncart.length}
+                    </p>
+                    <BsCart4
+                      size={27}
+                      className="text-gray-700 hover:text-cyan-600 cursor-pointer -ml-2 mb-[3px]"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           ) : (
             <Link href="/register">

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
@@ -30,41 +30,27 @@ export default function InfoUserForm({ setUserData, setStateBtns }) {
       if (!id_user) throw new Error("Usuario no encontrado");
 
       const userData = await getUserById(id_user);
-      setUser(userData);
+      setUser({ ...userData, id_user });
     } catch (error) {
       console.error("Error obteniendo usuario:", error);
     }
   };
 
   useEffect(() => {
-    getUser();
-  }, []);
-  useEffect(() => {
-    console.log("user", user);
-
     const validateUser = () => {
-      if (!user) return false; // Retorna false si no hay usuario
+      if (!user) return false;
 
       return Object.keys(user).some((key) => {
-        if (key === "address") {
-          console.log("key", key);
-          return Object.keys(user[key]).some((key2) => {
-            if (user[key][key2] === null || user[key][key2] === "") {
-              return true; // Si hay un campo vacío, retorna true
-            }
-            return false;
-          });
-        }
-        if (user[key] === null || user[key] === "") {
-          return true; // Si hay un campo vacío en user, retorna true
-        }
+        if (key === "address")
+          return Object.keys(user[key]).some((key2) =>
+            user[key][key2] === null || user[key][key2] === "" ? true : false
+          );
+        if (user[key] === null || user[key] === "") return true;
         return false;
       });
     };
 
-    const isValid = !validateUser(); // Si hay campos vacíos, isValid será false
-
-    console.log("validateUser", isValid);
+    const isValid = !validateUser();
 
     setStateBtns((prev) => ({
       ...prev,
@@ -72,6 +58,10 @@ export default function InfoUserForm({ setUserData, setStateBtns }) {
       btnBack: true,
     }));
   }, [user]);
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const validationSchema = Yup.object({
     name: Yup.string().required("El nombre es obligatorio"),

@@ -1,20 +1,19 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import ModalStepsSale from "../molecules/ModalStepsSale";
-import TableSaleProducts from "../organisms/TableProductsSale";
-import InfoUserForm from "../organisms/InfoUserForm";
+import ModalStepsSale from "../../molecules/ModalStepsSale";
+import TableSaleProducts from "../../organisms/TableProductsSale";
+import InfoUserForm from "../../organisms/InfoUserForm";
 // import PaymentPortal from "../organisms/PaymentPago";
-import ShowInfoSale from "../organisms/ShowInfoSale";
-import FinallySale from "../organisms/FinallySale";
+import ShowInfoSale from "../../organisms/ShowInfoSale";
+import FinallySale from "../../organisms/FinallySale";
 import Link from "next/link";
-import PaymentPago from "../organisms/PaymentPago";
+import PaymentPago from "../../organisms/PaymentPago";
 import { useSearchParams } from "next/navigation";
 
 export default function Sale() {
   const [steps, setSteps] = useState(1);
   const searchParams = useSearchParams();
-
   const [data, setData] = useState({
     products: [],
     user: {},
@@ -28,25 +27,12 @@ export default function Sale() {
   const handlePreviousStep = () => setSteps((prev) => Math.max(1, prev - 1));
   useEffect(() => {
     const redirectStatus = searchParams.get("redirect_status");
-    const payment_intent = searchParams.get("payment_intent");
-    const dataLocalStorage = localStorage.getItem("data");
-    const newData = JSON.parse(dataLocalStorage);
-    if (redirectStatus && payment_intent) {
-      const paymentData = {
-        payment_intent: searchParams.get("payment_intent") || null,
-        payment_intent_client_secret:
-          searchParams.get("payment_intent_client_secret") || null,
-        redirect_status: searchParams.get("redirect_status") || null,
-      };
-      console.log("paymentData", payment_intent);
-      setData({
-        ...newData,
-        paymentData: payment_intent,
-      });
 
+    if (redirectStatus) {
       setSteps(4);
     }
   }, [searchParams]);
+
   return (
     <div className="flex flex-col items-center justify-center mt-4">
       <ModalStepsSale
@@ -94,6 +80,7 @@ export default function Sale() {
               setStateBtns={setStateBtns}
               data={data}
               setData={setData}
+              setSteps={setSteps}
             />
           </div>
         )}

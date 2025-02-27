@@ -21,8 +21,21 @@ export default function ShowInfoSale({ data, setStateBtns }) {
 
       {/* Método de Pago */}
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-700">Método de Pago</h3>
-        <p className="text-gray-600">{paymentMethod}</p>
+        <h3 className="text-lg font-semibold text-gray-700">Total a pagar</h3>
+        <p className="text-gray-600 font-semibold">
+          $
+          {Math.round(
+            data.products.reduce(
+              (total, product) =>
+                total +
+                (product.price -
+                  (product.price * product.discount) / 100 +
+                  product.envio.costo * product.quantity) *
+                  product.quantity,
+              0
+            )
+          ).toLocaleString()}
+        </p>
       </div>
 
       {/* Información del Usuario */}
@@ -73,6 +86,13 @@ export default function ShowInfoSale({ data, setStateBtns }) {
             </div>
           ))}
         </div>
+      </div>
+      {/* Advertencia de que si le da continuar aceptas las condiciones */}
+      <div className="mb-4 text-center bg-red-50 py-2 px-4 border-red-400 border-2 rounded-lg">
+        <p className="text-red-500">
+          Al hacer click en el botón de pago, aceptas las condiciones y
+          responsabilidades de la empresa.
+        </p>
       </div>
     </div>
   );

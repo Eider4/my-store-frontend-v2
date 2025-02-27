@@ -8,10 +8,16 @@ import {
 } from "@stripe/react-stripe-js";
 import { useSearchParams } from "next/navigation";
 
-export default function PaymentForm({ setStateBtns, data, setData }) {
+export default function PaymentForm({
+  setStateBtns,
+  data,
+  setData,
+  setMsg,
+  handle_add_order,
+}) {
   const searchParams = useSearchParams();
-  const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const stripe = useStripe();
   const elements = useElements();
 
@@ -31,14 +37,18 @@ export default function PaymentForm({ setStateBtns, data, setData }) {
     setLoading(false);
 
     if (error) {
-      console.error("Error:", error);
-      return setErrorMsg({
+      console.log("error al crear payment intent", error);
+      return setMsg({
         message: error.message || "Ocurrió un error al procesar el pago.",
         type: "error",
       });
     }
+    handle_add_order({
+      ...data,
+      paymentData: paymentIntent.id,
+    });
 
-    setErrorMsg({
+    setMsg({
       message: "Pago exitoso ",
       type: "success",
     });
@@ -56,19 +66,20 @@ export default function PaymentForm({ setStateBtns, data, setData }) {
   useEffect(() => {
     const redirectStatus = searchParams.get("redirect_status");
     if (redirectStatus === "succeeded") {
-      setErrorMsg({
+      setMsg({
         message: "Pago exitoso ",
         type: "success",
       });
       setStateBtns({ btnNext: true, btnBack: false });
       localStorage.removeItem("paymentIntentId");
     } else if (redirectStatus === "failed") {
-      setErrorMsg({
+      setMsg({
         message: error.message || "Ocurrió un error al procesar el pago.",
         type: "error",
       });
     }
   }, [searchParams]);
+
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-lg bg-white shadow-lg rounded-lg p-6 border border-gray-200">
       <h2 className="text-xl font-semibold text-gray-700 mb-4">
@@ -79,38 +90,24 @@ export default function PaymentForm({ setStateBtns, data, setData }) {
         <PaymentElement />
       </div>
 
-      {!errorMsg && (
-        <button
-          disabled={loading}
-          className={`mt-6 w-full py-3 rounded-lg font-semibold transition ${
-            loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-cyan-500 hover:bg-cyan-600 text-white shadow-md"
-          }`}
-          onClick={handleClickOnPay}
-        >
-          {loading ? (
-            <div className="flex items-center justify-center gap-2">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Procesando...
-            </div>
-          ) : (
-            "Pagar"
-          )}
-        </button>
-      )}
-
-      {errorMsg && (
-        <p
-          className={`mt-4 w-full text-center p-3 rounded-md text-sm font-medium ${
-            errorMsg.type === "error"
-              ? "bg-red-100 text-red-600 border border-red-400"
-              : "bg-green-100 text-green-600 border border-green-400"
-          }`}
-        >
-          {errorMsg.message}
-        </p>
-      )}
+      <button
+        disabled={loading}
+        className={`mt-6 w-full py-3 rounded-lg font-semibold transition ${
+          loading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-cyan-500 hover:bg-cyan-600 text-white shadow-md"
+        }`}
+        onClick={handleClickOnPay}
+      >
+        {loading ? (
+          <div className="flex items-center justify-center gap-2">
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            Procesando...
+          </div>
+        ) : (
+          "Pagar"
+        )}
+      </button>
     </div>
   );
 }

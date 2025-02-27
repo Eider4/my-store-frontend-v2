@@ -6,7 +6,7 @@ import {
   updateProductInCart,
 } from "@/service/cart/cart.service";
 import { getProductById } from "@/service/products/products.service";
-import { use, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { FiMinus, FiPlus } from "react-icons/fi";
 
@@ -24,6 +24,8 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
     setProductDetails(details.sort((a, b) => a.title.localeCompare(b.title)));
   };
   const handleQuantityChange = async (index, increment) => {
+    //if (productsIncart.length <= 0) return;
+
     const productUpdate = productsIncart.find((p) => p.id_product === index);
     const quantity = increment
       ? productUpdate.quantity + 1
@@ -42,6 +44,8 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
     fetchProducts();
   }, [productsIncart]);
   const handleDeleteProduct = async (id_product) => {
+    //if (productsIncart.length <= 0) return;
+
     const response = await deleteProductInCart({
       id_product,
       id_cart: productsIncart[0].id_cart,
@@ -71,15 +75,13 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
         <div className="w-full text-xs overflow-x-auto">
           <div className="min-w-full inline-block align-middle">
             <div className="bg-cyan-500 text-white text-xs flex rounded-md">
-              <div className="px-5 py-3 text-left w-3/12 md:w-2/12 rounded-tl-lg">
+              <div className="px-5 py-3 text-left w-3/12  rounded-tl-lg">
                 Producto
               </div>
-              <div className="px-5 py-3 text-left w-2/12 md:w-2/12">
-                Precio Und.
-              </div>
-              <div className="px-5 py-3 text-left w-2/12 md:w-2/12">Cant.</div>
-              <div className="px-5 py-3 text-left w-3/12 md:w-2/12">Total</div>
-              <div className="px-5 py-3 text-left w-2/12 md:w-2/12 rounded-tr-lg"></div>
+              <div className="px-5 py-3 text-left w-2/12 ">Precio Und.</div>
+              <div className="px-5 py-3 text-left w-2/12 ">Cant.</div>
+              <div className="px-5 py-3 text-left w-3/12 ">Total</div>
+              <div className="px-5 py-3 text-left w-2/12  rounded-tr-lg"></div>
             </div>
             <div className="overflow-y-auto max-h-[40vh] scrollbar-none">
               {productDetails.map((product, index) => {
@@ -95,7 +97,7 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
                       index % 2 === 0 ? "bg-gray-50" : "bg-white"
                     } min-w-full`}
                   >
-                    <div className="px-5 py-3 flex items-center gap-4 w-3/12 md:w-2/12">
+                    <div className="px-5 py-3 flex items-center gap-4 w-3/12 ">
                       <img
                         className="h-10 w-10 object-cover rounded shadow"
                         src={product.images[0]}
@@ -105,7 +107,7 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
                         {product.title}
                       </p>
                     </div>
-                    <div className="px-5 py-3 text-left text-gray-600 w-2/12 md:w-2/12">
+                    <div className="px-5 py-3 text-left text-gray-600 w-2/12 ">
                       <div className="flex flex-col items-left text-left">
                         <p className="text-left ">
                           ${discountPrice.toLocaleString()}
@@ -117,10 +119,10 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
                         )}
                       </div>
                     </div>
-                    <div className="px-5 py-3 text-left text-gray-600 w-2/12 md:w-2/12">
+                    <div className="px-5 py-3 text-left text-gray-600 w-2/12 ">
                       {product.quantity}
                     </div>
-                    <div className="px-5 py-3 text-left text-gray-800 font-semibold w-3/12 md:w-2/12">
+                    <div className="px-5 py-3 text-left text-gray-800 font-semibold w-3/12 ">
                       <div className="flex flex-col items-left text-left">
                         <p>${totalPrice.toLocaleString()}</p>
                         {product.discount > 0 && (
@@ -130,7 +132,7 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
                         )}
                       </div>
                     </div>
-                    <div className="px-5 py-3 text-left text-gray-800 font-semibold w-2/12 md:w-2/12 ml-3">
+                    <div className="px-5 py-3 text-left text-gray-800 font-semibold w-2/12  ml-3">
                       <div className="flex items-center justify-end space-x-4">
                         <button
                           className={`p-2 transition-colors ${
@@ -175,22 +177,21 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
             </div>
           </div>
         </div>
-
         {/* Totales */}
         <div className="flex justify-between items-center mt-4 px-5">
           <p className="text-sm font-semibold text-gray-700 md:text-lg">
-            Total:{" "}
+            Subtotal:{" "}
             <span className="text-cyan-500">
               $
-              {productDetails
-                .reduce(
+              {Math.round(
+                productDetails.reduce(
                   (total, product) =>
                     total +
                     (product.price - (product.price * product.discount) / 100) *
                       product.quantity,
                   0
                 )
-                .toLocaleString()}
+              ).toLocaleString()}
             </span>
           </p>
           <p className="text-sm font-semibold text-gray-700 md:text-lg">
@@ -202,6 +203,41 @@ export default function TableSaleProducts({ setProducts, setStateBtns }) {
                   0
                 )
                 .toLocaleString()}
+            </span>
+          </p>
+        </div>{" "}
+        <div className="flex justify-between items-center mt-4 px-5">
+          <p className="text-sm font-semibold text-gray-700 md:text-lg">
+            Gastos de envío:{" "}
+            <span className="text-cyan-500">
+              $
+              {Math.round(
+                productDetails.reduce(
+                  (total, product) =>
+                    total +
+                    product.envio.costo * product.quantity * product.quantity,
+                  0
+                )
+              ).toLocaleString()}
+            </span>
+          </p>
+        </div>{" "}
+        <div className="flex justify-between items-center mt-4 px-5">
+          <p className="text-sm font-semibold text-gray-700 md:text-lg">
+            Total:{" "}
+            <span className="text-green-500">
+              $
+              {Math.round(
+                productDetails.reduce(
+                  (total, product) =>
+                    total +
+                    (product.price -
+                      (product.price * product.discount) / 100 +
+                      product.envio.costo * product.quantity) *
+                      product.quantity,
+                  0
+                )
+              ).toLocaleString()}
             </span>
           </p>
         </div>

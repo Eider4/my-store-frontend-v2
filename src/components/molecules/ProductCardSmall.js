@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaHeart, FaShoppingCart, FaInfoCircle } from "react-icons/fa"; // Importa los íconos

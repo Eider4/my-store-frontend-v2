@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>{/* Meta tags y otros elementos del head */}</head>
-      <body>
+      <body className="relative">
         <Suspense fallback={<div>Loading...</div>}>
           <ProductsIncartProvider>
             <div className="bg-gray-100 text-center py-4 text-gray-700 mt-24">

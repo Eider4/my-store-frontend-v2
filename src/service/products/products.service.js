@@ -48,7 +48,6 @@ export const addImages = async (images) => {
       },
       timeout: 10000,
     });
-    console.log("response en addImages", response);
     return response.data;
   } catch (error) {
     console.error("Error al subir imágenes:", error);
@@ -94,7 +93,6 @@ export const UpdateProduct = async (product) => {
 export const deleteImages = async (images) => {
   try {
     const response = await axios.post(`${api_url}/upload/delete`, images);
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log(error);

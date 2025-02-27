@@ -12,9 +12,13 @@ export const ProductsIncartProvider = ({ children }) => {
       if (user) {
         const response = await getProductsIncartService(user.id_user);
         setProductsIncart(response.data);
+        return response.data;
       }
+      return [];
     } catch (error) {
       console.log("error al obtener los productos", error);
+      setProductsIncart([]);
+      return [];
     }
   };
   const verifyProductInCart = (id_product) =>
@@ -25,7 +29,11 @@ export const ProductsIncartProvider = ({ children }) => {
   }, []);
   return (
     <ProductsIncart.Provider
-      value={{ productsIncart, verifyProductInCart, getProductsIncart }}
+      value={{
+        productsIncart,
+        verifyProductInCart,
+        getProductsIncart,
+      }}
     >
       {children}
     </ProductsIncart.Provider>

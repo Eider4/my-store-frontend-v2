@@ -31,12 +31,10 @@ export default function ModalProductsCart({
   };
   useEffect(() => {
     if (!isOpen) return;
-
     fetchProducts();
   }, [isOpen, products]);
 
   const handleQuantityChange = async (index, increment) => {
-    console.log("index", index);
     const productUpdate = productsIncart.find((p) => p.id_product === index);
     const quantity = increment
       ? productUpdate.quantity + 1
@@ -47,7 +45,6 @@ export default function ModalProductsCart({
       quantity,
       id_cart: productUpdate.id_cart,
     });
-    console.log("response", response);
     if (response.status !== 200) return;
     getProductsIncart();
     fetchProducts();

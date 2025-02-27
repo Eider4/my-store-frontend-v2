@@ -40,7 +40,7 @@ const ProductForm = ({ product }) => {
           category: "Electrónica",
           brand: "",
           warranty: "1 Mes",
-          rating: "",
+          rating: null,
           launch_date: new Date().toISOString().slice(0, 10),
           origin: "España",
           envio: {
@@ -48,6 +48,7 @@ const ProductForm = ({ product }) => {
             costo: 0,
             tiempo_estimado: "1 día",
           },
+          units: 1,
         },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -59,8 +60,6 @@ const ProductForm = ({ product }) => {
     onSubmit: async (values) => {
       try {
         setIsLoading(true);
-        console.log("filesImages", filesImages);
-
         const ImagesAdd = filesImages.filter((file) => {
           if (typeof file === "object") return file;
         });
@@ -88,6 +87,7 @@ const ProductForm = ({ product }) => {
           origin: values.origin,
           images: [...ImagesAdded, ...dataImages.images],
           especificaciones: especificaciones,
+          units: values.units,
           envio: {
             gratis: values.envio.gratis,
             costo: values.envio.costo,
@@ -95,7 +95,6 @@ const ProductForm = ({ product }) => {
           },
           comment: null,
         };
-        console.log("data", data.images);
         if (data.images.length > 5) {
           setIsLoading(false);
           return setMenssageRes("hay muchas imagenes ");
@@ -104,7 +103,6 @@ const ProductForm = ({ product }) => {
         const responseProduct = product
           ? await UpdateProduct(data)
           : await addProduct(data);
-        console.log("respuesta al actualizar producto", responseProduct);
         if (!responseProduct || responseProduct.status !== 200) {
           product
             ? setMenssageRes("Error al actualizar producto")
@@ -220,6 +218,18 @@ const ProductForm = ({ product }) => {
             />
             {formik.touched.brand && formik.errors.brand ? (
               <div className="text-red-500">{formik.errors.brand}</div>
+            ) : null}
+          </div>{" "}
+          {/* Campo de Unidades */}
+          <div className="flex flex-col">
+            <label className="block mb-2">Unidades</label>
+            <input
+              type="text"
+              {...formik.getFieldProps("units")}
+              className="p-2 border"
+            />
+            {formik.touched.units && formik.errors.units ? (
+              <div className="text-red-500">{formik.errors.units}</div>
             ) : null}
           </div>
           {/* Campo de Garantía */}
@@ -385,7 +395,6 @@ const ProductForm = ({ product }) => {
                           "https://res.cloudinary.com/dd3kdqnzg/image/upload/v1739813747"
                         )
                       ) {
-                        console.log("imagen borrada", Images[i]);
                         setImagesDelete((prev) => [...prev, Images[i]]);
                       }
                     }}

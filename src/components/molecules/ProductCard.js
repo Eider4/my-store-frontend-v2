@@ -1,11 +1,6 @@
 "use client";
-import React, { use, useContext, useEffect, useRef, useState } from "react";
-import {
-  FaCartPlus,
-  FaCartArrowDown,
-  FaInfoCircle,
-  FaHeart,
-} from "react-icons/fa";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { FaCartPlus, FaCartArrowDown, FaHeart } from "react-icons/fa";
 import { AiFillStar } from "react-icons/ai";
 import { MdCategory } from "react-icons/md";
 import Zoom from "react-medium-image-zoom";
@@ -29,8 +24,21 @@ import {
   verifyProductInLikedLocalStorage,
 } from "@/service/cart/cart.service";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { getProductById } from "@/service/products/products.service";
 
-const ProductCard = ({ product }) => {
+const ProductCard = () => {
+  const [product, setProduct] = useState(null);
+  const { productId } = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getProductById(productId);
+      setProduct(data);
+    };
+    fetchData();
+  }, [productId]);
+
   const [isCart, setIsCart] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const { verifyProductInCart, productsIncart, getProductsIncart } =
@@ -46,8 +54,8 @@ const ProductCard = ({ product }) => {
   const handleLikeProduct = async () => {
     try {
       const response = isLiked
-        ? await DeleteProductLikedLocalStorage(product.id_product)
-        : await AddProductLikedLocalStorage(product.id_product);
+        ? await DeleteProductLikedLocalStorage(product?.id_product)
+        : await AddProductLikedLocalStorage(product?.id_product);
       if (!response) return;
       setIsLiked(!isLiked);
     } catch (error) {
@@ -56,7 +64,7 @@ const ProductCard = ({ product }) => {
   };
   useEffect(() => {
     const checkIfAddedToCart = async () => {
-      const isAdded = await verifyProductInCart(product.id_product);
+      const isAdded = await verifyProductInCart(product?.id_product);
       setIsCart(isAdded);
     };
     checkIfAddedToCart();
@@ -66,9 +74,9 @@ const ProductCard = ({ product }) => {
       const response = isCart
         ? await deleteProductInCart({
             id_cart: productsIncart[0].id_cart,
-            id_product: product.id_product,
+            id_product: product?.id_product,
           })
-        : await addProductInCart(product.id_product, 1);
+        : await addProductInCart(product?.id_product, 1);
       if (!response.status === 200) return;
       getProductsIncart();
       setIsCart(!isCart);
@@ -78,12 +86,14 @@ const ProductCard = ({ product }) => {
   };
   useEffect(() => {
     const checkIfLiked = async () => {
-      const liked = await verifyProductInLikedLocalStorage(product.id_product);
+      const liked = await verifyProductInLikedLocalStorage(product?.id_product);
       setIsLiked(liked);
     };
     checkIfLiked();
-  }, [product.id_product]);
-  const launch_date = new Date(product.launch_date);
+  }, [product?.id_product]);
+  const launch_date = new Date(product?.launch_date);
+  if (!product) return <div>Product not found</div>;
+
   return (
     <div className=" shadow-lg rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-x-hidden">
       {/* Swiper para imágenes */}
@@ -101,7 +111,7 @@ const ProductCard = ({ product }) => {
           modules={[EffectCube]}
           className=" rounded-lg absolute md:-top-40 "
         >
-          {product.images.map((img, index) => (
+          {product?.images.map((img, index) => (
             <SwiperSlide key={index}>
               <Zoom>
                 <img
@@ -119,53 +129,53 @@ const ProductCard = ({ product }) => {
       {/* Información del producto */}
       <div className="flex flex-col pt-96 md:pt-0 md:ml-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          {product.title}
+          {product?.title}
         </h2>
         <p>
           <span className="text-lg font-semibold text-gray-900">
-            ${product.price.toLocaleString("es-ES")}
+            ${product?.price.toLocaleString("es-ES")}
           </span>
-          <span className="text-green-500 ml-2">-{product.discount}%</span>
+          <span className="text-green-500 ml-2">-{product?.discount}%</span>
         </p>
         {/* Categoría y calificación */}
         <div className="flex items-center text-gray-600 mb-3">
           <MdCategory className="mr-2 text-lg text-cyan-600" />
-          <span className="text-gray-800 font-medium">{product.category}</span>
+          <span className="text-gray-800 font-medium">{product?.category}</span>
         </div>
         <div className="flex items-center text-gray-600 mb-3">
           <AiFillStar className="mr-2 text-yellow-500 text-xl" />
           <span className="text-gray-800 font-medium">
-            {product.rating || "Sin calificación"}
+            {product?.rating || "Sin calificación"}
           </span>
         </div>
 
         {/* Detalles del producto */}
         <div className="space-y-2 text-gray-800">
           <p>
-            <strong>Marca:</strong> {product.brand}
+            <b>Marca:</b> {product?.brand}
           </p>
           <p>
-            <strong>Origen:</strong> {product.origin}
+            <b>Origen:</b> {product?.origin}
           </p>
           <p>
-            <strong>Garantía:</strong> {product.warranty}
+            <b>Garantía:</b> {product?.warranty}
           </p>
 
           <p>
-            <strong>Envío:</strong>
-            {product.envio.gratis ? (
+            <b>Envío:</b>
+            {product?.envio.gratis ? (
               <span className="text-green-600 font-semibold ml-1">
                 ¡Gratis!
               </span>
             ) : (
-              `${product.envio?.costo.toLocaleString("es-ES")} pesos`
+              `${product?.envio?.costo.toLocaleString("es-ES")} pesos`
             )}
           </p>
           <p>
-            <strong>Tiempo de envío:</strong> {product.envio.tiempo_estimado}
+            <b>Tiempo de envío:</b> {product?.envio.tiempo_estimado}
           </p>
           <p>
-            <strong>Fecha de lanzamiento:</strong>{" "}
+            <b>Fecha de lanzamiento:</b>{" "}
             {launch_date?.toLocaleDateString("es-ES")}
           </p>
         </div>
@@ -198,7 +208,7 @@ const ProductCard = ({ product }) => {
           >
             <FaHeart className="mr-2" /> Me gusta
           </button>
-          <Link href={`/add-products/${product.id_product}`}>
+          <Link href={`/add-products/${product?.id_product}`}>
             <button className="bg-cyan-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-700 cursor-pointer">
               Modificar
             </button>
@@ -216,7 +226,7 @@ const ProductCard = ({ product }) => {
               className={`text-gray-700 overflow-hidden transition-all duration-500 ease-in-out`}
               style={{ maxHeight: showFullDesc ? "500px" : `${altura}px` }}
             >
-              {product.description}
+              {product?.description}
             </p>
             <div
               className={`absolute -bottom-2 left-0 w-full  mt-4 bg-gradient-to-t ${
@@ -242,7 +252,7 @@ const ProductCard = ({ product }) => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(product.especificaciones).map(
+              {Object.entries(product?.especificaciones).map(
                 ([key, value], index) => (
                   <tr key={index} className="border">
                     <td className="px-4 py-2 font-semibold">{value.title}</td>
@@ -262,7 +272,7 @@ const ProductCard = ({ product }) => {
                 showFullDesc ? "max-h-[500px] mb-4" : "max-h-[80px]"
               }`}
             >
-              {product.description}
+              {product?.description}
             </p>
             <div
               className={`absolute bottom-0 left-0 w-full bg-gradient-to-t ${

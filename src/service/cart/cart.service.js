@@ -15,8 +15,13 @@ export const addProductInCart = async (id_product, quantity) => {
   return response;
 };
 export const getProductsIncartService = async (id_user) => {
-  const response = Axios.get(`${api_url}/productInCart/${id_user}`);
-  return response;
+  try {
+    const response = Axios.get(`${api_url}/productInCart/${id_user}`);
+    return response;
+  } catch (error) {
+    console.log("error al obtener los productos", error);
+    return [];
+  }
 };
 export const deleteProductInCart = async (data) => {
   const response = Axios.post(`${api_url}/productInCart/delete`, data);
@@ -66,7 +71,6 @@ export const deleteProductsAllInCart = async (id_cart) => {
   return response;
 };
 export const updateProductInCart = async (data) => {
-  console.log("data", data);
   const response = await Axios.post(`${api_url}/productInCart/update`, data);
   return response;
 };

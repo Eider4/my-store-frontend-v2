@@ -157,32 +157,101 @@ import {
   createPaymentIntent,
   updatePaymentIntent,
 } from "@/service/paymentPago/payment-pago.service";
+import { useSearchParams } from "next/navigation";
+import { createOrder } from "@/service/order/order.service";
 
 const stripePromise = loadStripe(
   "pk_test_51QvjRpQ8c2aNcIJpMuJNkWt8oodVoO52hmxmmIyCrXkk0auDLvkEUKfX2ymashedobBCup9aCnQ4cVtkJuAlK8zP00F6JmAI9g"
 );
-export default function PaymentPago({ setStateBtns, data, setData }) {
+export default function PaymentPago({ setStateBtns, data, setData, setSteps }) {
   const [stripeClientSecret, setStripeClientSecret] = useState(null);
+  const searchParams = useSearchParams();
+  const [Msg, setMsg] = useState(null);
+
   useEffect(() => {
     const initClientSecret = async () => {
       const paymentIntentId = localStorage.getItem("paymentIntentId");
+      const amount = Math.round(
+        data.products.reduce(
+          (total, product) =>
+            total +
+            (product.price -
+              (product.price * product.discount) / 100 +
+              product.envio.costo * product.quantity) *
+              product.quantity,
+          0
+        )
+      );
+      if (amount <= 0 || typeof amount !== "number" || amount > 999999.9)
+        return setMsg({
+          message: "El monto no puede ser 0 o mayor a 999999.9",
+          type: "error",
+        });
       if (paymentIntentId) {
         //  actualizar
-        const response = await updatePaymentIntent(paymentIntentId, "usd");
+        const response = await updatePaymentIntent(
+          paymentIntentId,
+          "usd",
+          amount
+        );
         setStripeClientSecret(response.clientSecret);
       } else {
         // crear
-        const response = await createPaymentIntent("usd");
-        console.log("response", response);
+        const response = await createPaymentIntent("usd", amount);
         setStripeClientSecret(response.clientSecret);
         localStorage.setItem("paymentIntentId", response.paymentIntentsId);
       }
     };
     initClientSecret();
   }, []);
+  useEffect(() => {
+    const redirectStatus = searchParams.get("redirect_status");
+    const payment_intent = searchParams.getAll("payment_intent");
+    const dataLocalStorage = localStorage.getItem("data");
+    const newData = JSON.parse(dataLocalStorage);
+    if (redirectStatus == "succeeded" && payment_intent[1]) {
+      setStateBtns({ btnNext: true, btnBack: false });
+      handle_add_order({
+        ...newData,
+        paymentData: payment_intent[1],
+      });
+      setMsg({
+        message: "Pago exitoso ",
+        type: "success",
+      });
+      setData({ ...newData, paymentData: payment_intent[1] });
+    }
+    if (redirectStatus == "failed") {
+      setMsg({
+        message: error.message || "Ocurrió un error al procesar el pago.",
+        type: "error",
+      });
+    }
+  }, [searchParams]);
+  const handle_add_order = async (request) => {
+    try {
+      await createOrder(request);
+      setMsg({
+        message: "Se realizo el pago exitosamente y se ha creado la orden.",
+        type: "success",
+      });
+    } catch (error) {
+      console.log("error", error);
+      setMsg({
+        message: error.message || "Ocurrió un error al procesar el pago.",
+        type: "error",
+      });
+    }
+  };
+  useEffect(() => {
+    data?.products?.length > 0 &&
+      Msg?.type === "success" &&
+      localStorage.setItem("data", JSON.stringify(data)) &&
+      setStateBtns({ btnNext: true, btnBack: false });
+  }, [Msg]);
   return (
     <>
-      {stripeClientSecret && (
+      {!Msg && stripeClientSecret && (
         <>
           <Elements
             key={"usd"}
@@ -193,9 +262,23 @@ export default function PaymentPago({ setStateBtns, data, setData }) {
               setStateBtns={setStateBtns}
               data={data}
               setData={setData}
+              setSteps={setSteps}
+              setMsg={setMsg}
+              handle_add_order={handle_add_order}
             />
           </Elements>
         </>
+      )}
+      {Msg && (
+        <p
+          className={`mt-4 w-full text-center p-3 rounded-md text-sm font-medium ${
+            Msg.type === "error"
+              ? "bg-red-100 text-red-600 border border-red-400"
+              : "bg-green-100 text-green-600 border border-green-400"
+          }`}
+        >
+          {Msg.message}
+        </p>
       )}
     </>
   );
