@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://54.221.158.210:5000";
 
 export const updatePaymentIntent = async (
   paymentIntentId,

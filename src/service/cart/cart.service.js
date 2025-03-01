@@ -2,7 +2,7 @@
 import Axios from "axios";
 import { getUserLocalStorageAndSessionStorage } from "../auth/auth.service";
 
-const api_url = process.env.URL_SERVER || "http://localhost:5000";
+const api_url = process.env.URL_SERVER || "http://54.221.158.210:5000";
 
 export const addProductInCart = async (id_product, quantity) => {
   const getUser = await getUserLocalStorageAndSessionStorage();

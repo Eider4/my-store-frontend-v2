@@ -1,6 +1,6 @@
 // frontend/src/api/userApi.js
 import axios from "axios";
-const API_URL = "http://localhost:5000";
+const API_URL = "http://54.221.158.210:5000";
 
 export const registerUser = async (userData) => {
   const response = await axios.post(`${API_URL}/auth/register`, userData, {

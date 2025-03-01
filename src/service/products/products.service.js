@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const api_url = process.env.URL_SERVER || "http://localhost:5000";
+const api_url = process.env.URL_SERVER || "http://54.221.158.210:5000";
 export const getProducts = async () => {
   try {
     const response = await axios.get(`${api_url}/product/`);
