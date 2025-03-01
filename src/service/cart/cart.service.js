@@ -19,7 +19,7 @@ export const addProductInCart = async (id_product, quantity) => {
       quantity,
     };
     const response = await api.post("/productInCart", productInCart);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error al agregar producto al carrito:", error);
     throw error;
@@ -29,7 +29,7 @@ export const addProductInCart = async (id_product, quantity) => {
 export const getProductsIncartService = async (id_user) => {
   try {
     const response = await api.get(`/productInCart/${id_user}`);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error al obtener los productos en el carrito:", error);
     return [];

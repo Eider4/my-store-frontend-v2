@@ -49,7 +49,12 @@ const ProductCardSmall = ({ product }) => {
       getProductsIncart();
       setIsAddedToCart(!isAddedToCart);
     } catch (error) {
-      console.log("error al agregar al carrito", error);
+      console.log(
+        isAddedToCart
+          ? "error al agregar al carrito"
+          : "error al eliminar al carrito",
+        error
+      );
     }
   };
   useEffect(() => {
