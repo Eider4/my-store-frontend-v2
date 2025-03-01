@@ -160,7 +160,9 @@ const ProductCard = () => {
           <p>
             <b>Garantía:</b> {product?.warranty}
           </p>
-
+          <p>
+            <b>Unidades:</b> {product?.units}
+          </p>
           <p>
             <b>Envío:</b>
             {product?.envio.gratis ? (

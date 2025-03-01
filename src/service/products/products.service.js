@@ -71,18 +71,6 @@ export const addProduct = async (product) => {
     return { data: error, status: 500 };
   }
 };
-export const DeleteProduct = async (product) => {
-  try {
-    const response = localStorage.getItem("products");
-    const products = response ? JSON.parse(response) : [];
-    const productExists = products.filter((p) => p.uid !== product.uid);
-    localStorage.setItem("products", JSON.stringify(productExists));
-    return { data: productExists, status: 200 };
-  } catch (error) {
-    console.log(error);
-    return { data: error, status: 500 };
-  }
-};
 export const UpdateProduct = async (product) => {
   const response = axios.put(
     `${api_url}/product/update/${product.id_product}`,

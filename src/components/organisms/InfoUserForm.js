@@ -100,7 +100,7 @@ export default function InfoUserForm({ setUserData, setStateBtns }) {
 
   if (!user) return <p className="text-center text-gray-500">Cargando...</p>;
   return (
-    <div className="bg-white p-8 rounded-xl shadow-xl w-full mx-[3vw] mt-10">
+    <div className="bg-white p-8 rounded-xl shadow-xl w-full  mt-10">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Información del Usuario
       </h2>

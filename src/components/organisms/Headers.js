@@ -7,7 +7,7 @@ import { getUserLocalStorageAndSessionStorage } from "@/service/auth/auth.servic
 import { HiOutlineHome } from "react-icons/hi";
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineWhatsApp } from "react-icons/ai";
-import { RiUserAddLine } from "react-icons/ri";
+import { RiUserAddLine, RiUserSmileLine } from "react-icons/ri";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { MdOutlineAddBusiness } from "react-icons/md";
 import { ProductsIncart } from "@/context/productsInCart";
@@ -117,6 +117,12 @@ const HeaderComponent = () => {
               </Link>
               <Link href="/add-products">
                 <MdOutlineAddBusiness
+                  size={28}
+                  className="text-gray-700 hover:text-cyan-500 cursor-pointer"
+                />
+              </Link>
+              <Link href="/profile">
+                <RiUserSmileLine
                   size={28}
                   className="text-gray-700 hover:text-cyan-500 cursor-pointer"
                 />
