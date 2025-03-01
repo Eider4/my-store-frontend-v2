@@ -48,7 +48,6 @@ export const getProductsInOrder = async (id_order) => {
       `${url_api}/order/productInOrder/${id_order}`
     );
     const response = await api.get(`/order/productInOrder/${id_order}`);
-    console.log("Productos en la orden:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error al obtener los productos en la orden:", error);

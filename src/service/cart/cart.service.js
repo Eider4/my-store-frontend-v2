@@ -51,7 +51,7 @@ export const deleteProductsAllInCart = async (id_cart) => {
     const response = await api.post(
       `/productInCart/deleteProductsAllInCart/${id_cart}`
     );
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error al eliminar todos los productos del carrito:", error);
     throw error;
@@ -61,7 +61,7 @@ export const deleteProductsAllInCart = async (id_cart) => {
 export const updateProductInCart = async (data) => {
   try {
     const response = await api.post("/productInCart/update", data);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error al actualizar producto en el carrito:", error);
     throw error;
