@@ -127,7 +127,7 @@ const HeaderComponent = () => {
                   className="text-gray-700 hover:text-cyan-500 cursor-pointer"
                 />
               </Link>
-              {productsIncart.length > 0 && (
+              {productsIncart?.length > 0 && (
                 <div className="relative ">
                   <div onClick={() => setIsModalOpen(!isModalOpen)}>
                     <span className="absolute -top-[2px] -right-[3px]">

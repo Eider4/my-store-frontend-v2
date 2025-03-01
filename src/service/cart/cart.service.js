@@ -2,75 +2,108 @@
 import Axios from "axios";
 import { getUserLocalStorageAndSessionStorage } from "../auth/auth.service";
 
-const api_url = process.env.URL_SERVER || "http://54.221.158.210:5000";
+const api = Axios.create({
+  baseURL:
+    process.env.URL_SERVER || "https://23d3-54-221-158-210.ngrok-free.app",
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
+});
 
 export const addProductInCart = async (id_product, quantity) => {
-  const getUser = await getUserLocalStorageAndSessionStorage();
-  const productInCart = {
-    id_product,
-    id_user: getUser.id_user,
-    quantity,
-  };
-  const response = Axios.post(`${api_url}/productInCart`, productInCart);
-  return response;
+  try {
+    const getUser = await getUserLocalStorageAndSessionStorage();
+    const productInCart = {
+      id_product,
+      id_user: getUser.id_user,
+      quantity,
+    };
+    const response = await api.post("/productInCart", productInCart);
+    return response.data;
+  } catch (error) {
+    console.error("Error al agregar producto al carrito:", error);
+    throw error;
+  }
 };
+
 export const getProductsIncartService = async (id_user) => {
   try {
-    const response = Axios.get(`${api_url}/productInCart/${id_user}`);
-    return response;
+    const response = await api.get(`/productInCart/${id_user}`);
+    return response.data;
   } catch (error) {
-    console.log("error al obtener los productos", error);
+    console.error("Error al obtener los productos en el carrito:", error);
     return [];
   }
 };
+
 export const deleteProductInCart = async (data) => {
-  const response = Axios.post(`${api_url}/productInCart/delete`, data);
-  return response;
+  try {
+    const response = await api.post("/productInCart/delete", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar producto del carrito:", error);
+    throw error;
+  }
 };
+
+export const deleteProductsAllInCart = async (id_cart) => {
+  try {
+    const response = await api.post(
+      `/productInCart/deleteProductsAllInCart/${id_cart}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar todos los productos del carrito:", error);
+    throw error;
+  }
+};
+
+export const updateProductInCart = async (data) => {
+  try {
+    const response = await api.post("/productInCart/update", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar producto en el carrito:", error);
+    throw error;
+  }
+};
+
+// Funciones para manejar productos favoritos en localStorage
 export const AddProductLikedLocalStorage = async (id_product) => {
   try {
-    const productsLiked = localStorage.getItem("productsLiked");
-    const products = productsLiked ? JSON.parse(productsLiked) : [];
+    const productsLiked =
+      JSON.parse(localStorage.getItem("productsLiked")) || [];
     localStorage.setItem(
       "productsLiked",
-      JSON.stringify([...products, id_product])
+      JSON.stringify([...productsLiked, id_product])
     );
     return true;
   } catch (error) {
-    console.log(error);
+    console.error("Error al agregar producto a favoritos:", error);
     return false;
   }
 };
+
 export const DeleteProductLikedLocalStorage = async (id_product) => {
   try {
-    const productsLiked = localStorage.getItem("productsLiked");
-    const products = productsLiked ? JSON.parse(productsLiked) : [];
-    const productNews = products.filter((p) => p !== id_product);
-    localStorage.setItem("productsLiked", JSON.stringify(productNews));
+    const productsLiked =
+      JSON.parse(localStorage.getItem("productsLiked")) || [];
+    const updatedProducts = productsLiked.filter((p) => p !== id_product);
+    localStorage.setItem("productsLiked", JSON.stringify(updatedProducts));
     return true;
   } catch (error) {
-    console.log(error);
+    console.error("Error al eliminar producto de favoritos:", error);
     return false;
   }
 };
+
 export const verifyProductInLikedLocalStorage = async (id_product) => {
   try {
-    const productsLiked = localStorage.getItem("productsLiked");
-    const products = productsLiked ? JSON.parse(productsLiked) : [];
-    const isLiked = products.some((p) => p === id_product);
-    return isLiked;
+    const productsLiked =
+      JSON.parse(localStorage.getItem("productsLiked")) || [];
+    return productsLiked.includes(id_product);
   } catch (error) {
-    console.log(error);
+    console.error("Error al verificar producto en favoritos:", error);
     return false;
   }
-};
-export const deleteProductsAllInCart = async (id_cart) => {
-  const response = await Axios.post(
-    `${api_url}/productInCart/deleteProductsAllInCart/${id_cart}`
-  );
-  return response;
-};
-export const updateProductInCart = async (data) => {
-  const response = await Axios.post(`${api_url}/productInCart/update`, data);
-  return response;
 };

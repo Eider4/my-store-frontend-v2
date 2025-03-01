@@ -15,6 +15,7 @@ const ShowProducts = () => {
   const fetchData = async () => {
     try {
       const data = await getProducts();
+      if (data.length === 0) return;
       setProducts(data);
       setLoading(false);
     } catch (error) {
@@ -30,6 +31,7 @@ const ShowProducts = () => {
   if (error) {
     return <div>Error al cargar productos</div>;
   }
+  if (products && products.length === 0) return;
   return (
     <div className="flex flex-wrap gap-4 mt-8 justify-center md:mx-[15vw]">
       {products?.map((product) => (

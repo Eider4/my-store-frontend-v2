@@ -22,7 +22,7 @@ export const ProductsIncartProvider = ({ children }) => {
     }
   };
   const verifyProductInCart = (id_product) =>
-    productsIncart.some((product) => product.id_product === id_product);
+    productsIncart?.some((product) => product.id_product === id_product);
 
   useEffect(() => {
     getProductsIncart();

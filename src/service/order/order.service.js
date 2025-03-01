@@ -1,30 +1,67 @@
 import axios from "axios";
-const url_api = "http://54.221.158.210:5000";
+
+const url_api = "https://23d3-54-221-158-210.ngrok-free.app";
+
+// Configuración de axios con el header necesario
+const api = axios.create({
+  baseURL: url_api,
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
+});
+
 export const createOrder = async (data) => {
-  const response = await axios.post(`${url_api}/order`, data);
-  return response.data;
+  try {
+    const response = await api.post("/order", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear la orden:", error);
+    throw error;
+  }
 };
 
 export const getOrdersByIdUser = async (user_id) => {
-  const response = await axios.get(`${url_api}/order/${user_id}`);
-  return response.data;
+  try {
+    const response = await api.get(`/order/${user_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener órdenes del usuario:", error);
+    throw error;
+  }
 };
 
 export const getOrderById = async (id) => {
-  console.log("id", `${url_api}/order/by_id/${id}`);
-  const response = await axios.get(`${url_api}/order/by_id/${id}`);
-  return response.data;
+  try {
+    console.log("Obteniendo orden por ID:", `${url_api}/order/by_id/${id}`);
+    const response = await api.get(`/order/by_id/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener la orden:", error);
+    throw error;
+  }
 };
 
 export const getProductsInOrder = async (id_order) => {
-  console.log("id_order", `${url_api}/order/productInOrder/${id_order}`);
-  const response = await axios.get(
-    `${url_api}/order/productInOrder/${id_order}`
-  );
-  console.log("response", response);
-  return response.data;
+  try {
+    console.log(
+      "Obteniendo productos en la orden:",
+      `${url_api}/order/productInOrder/${id_order}`
+    );
+    const response = await api.get(`/order/productInOrder/${id_order}`);
+    console.log("Productos en la orden:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener los productos en la orden:", error);
+    throw error;
+  }
 };
+
 export const updateProductInOrder = async (data) => {
-  const response = await axios.post(`${url_api}/productInOrder/update`, data);
-  return response.data;
+  try {
+    const response = await api.post("/productInOrder/update", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar el producto en la orden:", error);
+    throw error;
+  }
 };
