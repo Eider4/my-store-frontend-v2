@@ -3,8 +3,7 @@ import Axios from "axios";
 import { getUserLocalStorageAndSessionStorage } from "../auth/auth.service";
 
 const api = Axios.create({
-  baseURL:
-    process.env.URL_SERVER || "https://23d3-54-221-158-210.ngrok-free.app",
+  baseURL: process.env.NEXT_PUBLIC_URL_SERVER,
   headers: {
     "ngrok-skip-browser-warning": "true",
   },

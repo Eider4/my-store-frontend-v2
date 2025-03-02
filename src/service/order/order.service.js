@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url_api = "https://23d3-54-221-158-210.ngrok-free.app";
+const url_api = process.env.NEXT_PUBLIC_URL_SERVER;
 
 // Configuración de axios con el header necesario
 const api = axios.create({

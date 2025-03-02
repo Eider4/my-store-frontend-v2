@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://23d3-54-221-158-210.ngrok-free.app";
+const BASE_URL = process.env.NEXT_PUBLIC_URL_SERVER;
 
 // Configuración global de Axios con el header de Ngrok
 const api = axios.create({
