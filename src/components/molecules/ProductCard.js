@@ -26,6 +26,7 @@ import {
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getProductById } from "@/service/products/products.service";
+import { PiArrowArcLeftLight } from "react-icons/pi";
 
 const ProductCard = () => {
   const [product, setProduct] = useState(null);
@@ -95,9 +96,10 @@ const ProductCard = () => {
   if (!product) return <div>Product not found</div>;
 
   return (
-    <div className=" shadow-lg rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-x-hidden">
+    <div className="shadow-lg rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-x-hidden">
       {/* Swiper para imágenes */}
-      <div className="w-96 absolute top-72 pr-[20vw]  md:pb-20 md:top-72 left-[15vw] md:relative md:pr-[90vw] ">
+
+      <div className="absolute top-[12%] right-1/2 sm:top-[15%] md:relative md:mt-72 ">
         <Swiper
           effect={"cube"}
           grabCursor={true}
@@ -111,23 +113,25 @@ const ProductCard = () => {
           modules={[EffectCube]}
           className=" rounded-lg absolute md:-top-40 "
         >
-          {product?.images.map((img, index) => (
-            <SwiperSlide key={index}>
-              <Zoom>
-                <img
-                  src={img}
-                  alt={`Slide ${index}`}
-                  className="w-full h-80 object-cover rounded-lg"
-                />
-              </Zoom>
-            </SwiperSlide>
-          ))}
+          <div className="relative">
+            {product?.images.map((img, index) => (
+              <SwiperSlide key={index}>
+                <Zoom>
+                  <img
+                    src={img}
+                    alt={`Slide ${index}`}
+                    className="h-80 w-[30vh] object-cover rounded-lg"
+                  />
+                </Zoom>
+              </SwiperSlide>
+            ))}
+          </div>
         </Swiper>
         {/* Añadir scrollbar debajo con margen */}
       </div>
 
       {/* Información del producto */}
-      <div className="flex flex-col pt-96 md:pt-0 md:ml-16">
+      <div className="flex flex-col pt-[115%] md:pt-0 md:ml-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
           {product?.title}
         </h2>
@@ -182,9 +186,9 @@ const ProductCard = () => {
           </p>
         </div>
         {/* Botón de carrito */}
-        <div className="flex flex-col sm:flex-row gap-2 mb-4 z-20">
+        <div className="flex flex-wrap sm:flex-row gap-2 mb-4 z-20">
           <button
-            className="bg-cyan-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-700"
+            className="bg-cyan-500 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-600"
             onClick={handleAddToCart}
           >
             {isCart ? (
@@ -197,7 +201,7 @@ const ProductCard = () => {
               </>
             )}
           </button>
-          <button className="bg-cyan-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-700">
+          <button className="bg-green-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-green-700">
             Comprar
           </button>
           <button
@@ -205,13 +209,13 @@ const ProductCard = () => {
             className={`py-2 px-4 rounded-lg flex items-center justify-center transition-all ${
               isLiked
                 ? "bg-purple-600 hover:bg-purple-700"
-                : "bg-cyan-600 hover:bg-cyan-700"
+                : "bg-gray-600 hover:bg-gray-700"
             } text-white`}
           >
             <FaHeart className="mr-2" /> Me gusta
           </button>
           <Link href={`/add-products/${product?.id_product}`}>
-            <button className="bg-cyan-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-cyan-700 cursor-pointer">
+            <button className="bg-blue-600 text-white py-2 px-4 rounded-lg flex items-center justify-center transition-all hover:bg-blue-700 cursor-pointer">
               Modificar
             </button>
           </Link>
