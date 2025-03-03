@@ -7,6 +7,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { useSearchParams } from "next/navigation";
+const url_front = process.env.NEXT_PUBLIC_URL_FRONTEND;
 
 export default function PaymentForm({
   setStateBtns,
@@ -20,7 +21,6 @@ export default function PaymentForm({
 
   const stripe = useStripe();
   const elements = useElements();
-
   const handleClickOnPay = async () => {
     if (!stripe || !elements) return;
     setLoading(true);
@@ -28,7 +28,7 @@ export default function PaymentForm({
       elements,
       redirect: "if_required",
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_URL_FRONTEND}/finally-sale?payment_intent=`,
+        return_url: `${url_front}/finally-sale?payment_intent=`,
       },
     });
 
