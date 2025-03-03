@@ -68,11 +68,7 @@ export const confirmUser = async (userData) => {
 };
 
 export const loginUser = async (userData) => {
-  try {
-    return await api.post("/auth/login", userData);
-  } catch (error) {
-    console.error("Error al iniciar sesión:", error);
-  }
+  return await api.post("/auth/login", userData);
 };
 
 export const getUserLocalStorageAndSessionStorage = async () => {

@@ -6,13 +6,15 @@ import {
 } from "@/service/auth/auth.service";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [tooltipMsg, setTooltipMsg] = useState(null);
+  const router = useRouter();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -38,17 +40,41 @@ const LoginForm = () => {
         password: values.password,
         name: values.name,
       });
+      if (response.status !== 200) {
+        setTooltipMsg({
+          message:
+            "Ocurrió un error al iniciar sesión, verifica tus credenciales",
+          type: "error",
+        });
+        return;
+      }
       values && values.rememberMe
         ? await saveUserInLocalStorage(response.data)
         : await saveUserInSessionStorage(response.data);
-
+      setTooltipMsg({
+        message: "Sesión iniciada exitosamente",
+        type: "success",
+      });
       setSubmitting(false);
-      alert(response.data.message);
     } catch (error) {
+      setTooltipMsg({
+        message:
+          "Ocurrió un error al iniciar sesión, verifica tus credenciales",
+        type: "error",
+      });
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    if (tooltipMsg) {
+      setTimeout(() => {
+        if (tooltipMsg.type === "success") {
+          router.push("/");
+        }
+        setTooltipMsg(null);
+      }, 2500);
+    }
+  }, [tooltipMsg]);
   return (
     <div className="p-6 border rounded-lg shadow-lg w-full max-w-md mx-auto bg-white">
       estacontraseñaPrueba123...
@@ -147,6 +173,17 @@ const LoginForm = () => {
           </Form>
         )}
       </Formik>
+      {tooltipMsg && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm backdrop-opacity-40 bg-black/20 animate-fade-in">
+          <div
+            className={`bg-${
+              tooltipMsg.type === "success" ? "green" : "red"
+            }-500 text-white p-4 rounded-lg w-[70vw] max-w-sm shadow-lg text-center transition-opacity duration-300`}
+          >
+            <p className="text-sm font-semibold">{tooltipMsg.message}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
