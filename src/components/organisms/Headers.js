@@ -24,6 +24,7 @@ const HeaderComponent = () => {
   const { productsIncart } = useContext(ProductsIncart);
 
 
+
   const handleFilter = async (e) => {
     const value = e.target.value.trim();
     setSearch(value);
