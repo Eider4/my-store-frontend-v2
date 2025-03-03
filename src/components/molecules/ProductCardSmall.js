@@ -19,6 +19,7 @@ const ProductCardSmall = ({ product }) => {
   const { verifyProductInCart, productsIncart, getProductsIncart } =
     useContext(ProductsIncart);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [indexImg, setIndexImg] = useState(0);
   const [isAddedToCart, setIsAddedToCart] = useState(
     verifyProductInCart(id_product)
   );
@@ -67,7 +68,11 @@ const ProductCardSmall = ({ product }) => {
     };
     checkIfLiked();
   }, [id_product]);
-
+  const handleImg = () => {
+    setTimeout(() => {
+      setIndexImg((prev) => (prev + 1 === images.length ? 0 : prev + 1));
+    }, 1500);
+  };
   return (
     <div
       className={`bg-white shadow-md rounded-2xl p-4 w-72 hover:shadow-lg transition-all ${
@@ -89,11 +94,11 @@ const ProductCardSmall = ({ product }) => {
           >
             <div className="relative w-full h-40">
               <Image
-                src={images[0]}
+                src={images[indexImg]}
                 alt={title}
                 layout="fill"
-                objectFit="cover"
-                className="rounded-xl"
+                onMouseLeave={handleImg}
+                className="rounded-xl object-cover hover:object-contain"
               />
             </div>
             <div className="mt-3">

@@ -3,7 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getProductsFiltered } from "@/service/products/products.service";
-import { getUserLocalStorageAndSessionStorage } from "@/service/auth/auth.service";
+import {
+  deleteUserSessionStorageAndLocalStorage,
+  getUserLocalStorageAndSessionStorage,
+} from "@/service/auth/auth.service";
 import { HiOutlineHome } from "react-icons/hi";
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineWhatsApp } from "react-icons/ai";
@@ -14,6 +17,7 @@ import { ProductsIncart } from "@/context/productsInCart";
 import { BsCart4 } from "react-icons/bs";
 import { FaCircle } from "react-icons/fa";
 import ModalProductsCart from "../molecules/ModalProductsCart";
+import { IoMdLogOut } from "react-icons/io";
 
 const HeaderComponent = () => {
   const [search, setSearch] = useState("");
@@ -21,7 +25,7 @@ const HeaderComponent = () => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
-  const { productsIncart } = useContext(ProductsIncart);
+  const { productsIncart, setProductsIncart } = useContext(ProductsIncart);
   const handleFilter = async (e) => {
     const value = e.target.value;
     setSearch(value);
@@ -37,12 +41,20 @@ const HeaderComponent = () => {
     };
     fetchUser();
   }, [pathname]);
-
+  const handleLogOut = async () => {
+    try {
+      await deleteUserSessionStorageAndLocalStorage();
+      setProductsIncart([]);
+      setIsUserLoggedIn(null);
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
   return (
     <header className="bg-white shadow-md max-w-[99vw] w-full fixed top-0 left-0 z-50">
       <div className="bg-cyan-500 py-2 text-center max-w-[99.9vw] text-white">
         <h1 className="text-3xl font-bold ">
-          Encuentra lo que amas, al mejor precio.
+          {/* Encuentra lo que amas, al mejor precio. */}
         </h1>
       </div>
       <div className="container mx-auto flex items-center justify-between p-4 relative h-20">
@@ -127,6 +139,12 @@ const HeaderComponent = () => {
                   className="text-gray-700 hover:text-cyan-500 cursor-pointer"
                 />
               </Link>
+              <button onClick={handleLogOut}>
+                <IoMdLogOut
+                  size={28}
+                  className="text-gray-700 hover:text-cyan-500 cursor-pointer"
+                />
+              </button>
               {productsIncart?.length > 0 && (
                 <div className="relative ">
                   <div onClick={() => setIsModalOpen(!isModalOpen)}>

@@ -33,7 +33,7 @@ const ShowProducts = () => {
   }
   if (products && products.length === 0) return;
   return (
-    <div className="flex flex-wrap gap-4 mt-8 justify-center md:mx-[15vw]">
+    <div className="flex flex-wrap gap-4 sm:mt-8 mt-16  justify-center md:mx-[15vw]">
       {products?.map((product) => (
         <ProductCardSmall product={product} key={product.id_product} />
       ))}

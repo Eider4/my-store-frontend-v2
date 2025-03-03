@@ -96,3 +96,17 @@ export const getUserById = async (id) => {
 export const updateUser = async (userData) => {
   return (await api.put("/user/update", userData)).data;
 };
+
+export const deleteUserSessionStorageAndLocalStorage = async () => {
+  try {
+    sessionStorage.removeItem("user");
+    localStorage.removeItem("user");
+    return {
+      success: true,
+      message: "Usuario cerrado exitosamente",
+    };
+  } catch (error) {
+    console.error("Error al cerrar sesión:", error);
+    return { success: false, message: error.message };
+  }
+};

@@ -33,6 +33,7 @@ export const ProductsIncartProvider = ({ children }) => {
         productsIncart,
         verifyProductInCart,
         getProductsIncart,
+        setProductsIncart,
       }}
     >
       {children}
