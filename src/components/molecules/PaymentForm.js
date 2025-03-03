@@ -28,7 +28,7 @@ export default function PaymentForm({
       elements,
       redirect: "if_required",
       confirmParams: {
-        return_url: "http://localhost:5001/finally-sale?payment_intent=",
+        return_url: `${process.env.NEXT_PUBLIC_URL_FRONTEND}/finally-sale?payment_intent=`,
       },
     });
 
