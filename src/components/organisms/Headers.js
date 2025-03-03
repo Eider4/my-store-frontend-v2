@@ -2,6 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation"; 
 import { getProductsFiltered } from "@/service/products/products.service";
 import { getUserLocalStorageAndSessionStorage } from "@/service/auth/auth.service";
 import { HiOutlineHome } from "react-icons/hi";
@@ -22,36 +23,15 @@ const HeaderComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
   const { productsIncart } = useContext(ProductsIncart);
-
-
-
+  const router = useRouter(); 
   const handleFilter = async (e) => {
-    const value = e.target.value.trim();
+    const value = e.target.value;
     setSearch(value);
+    if (value === "") return setFilteredProducts([]);
 
-    if (value === "") {
-      setFilteredProducts([]);
-      return;
-    }
-    try {
-      const response = await getProductsFiltered(value);
-      console.log("Respuesta API:", response);
-      if (response?.data?.products) {
-        setFilteredProducts(response.data.products);
-      } else {
-        setFilteredProducts([]);
-      }
-    } catch (error) {
-      console.error("Error en la búsqueda:", error);
-      setFilteredProducts([]);
-    }
+    const { data, status } = await getProductsFiltered(value);
+    if (status == 200) setFilteredProducts(data.products);
   };
-
-
-  const ManejarClickDelProducto = (id) => {
-    console.log(`Producto seleccionado: ${id}`);
-  };
-
   useEffect(() => {
     const fetchUser = async () => {
       const user = await getUserLocalStorageAndSessionStorage();
@@ -59,6 +39,12 @@ const HeaderComponent = () => {
     };
     fetchUser();
   }, [pathname]);
+
+  const ManejarClickDelProducto = (id) => {
+    router.push(`/product/${id}`); // Usa router.push en lugar de pathname.push
+    setSearch("");
+    setFilteredProducts([]);
+  };
 
   return (
     <header className="bg-white shadow-md max-w-[99vw] w-full fixed top-0 left-0 z-50">
@@ -83,7 +69,7 @@ const HeaderComponent = () => {
             <div className="absolute top-14 left-0 right-0 bg-white border border-gray-300 shadow-lg rounded-lg mt-2 p-4 max-h-96 overflow-y-auto z-50">
               <ul className="space-y-2">
                 {filteredProducts.length > 0 ? (
-                  filteredProducts.map((item) => (
+                  filteredProducts.map((item, i) => (
                     <li
                       onClick={() => ManejarClickDelProducto(item.id_product)}
                       key={item.id_product}
@@ -92,12 +78,13 @@ const HeaderComponent = () => {
                       <img
                         src={item.images[0]}
                         alt={item.title}
-                        className="w-10 max-h-10 mr-3 rounded-md"
+                        className="w-10  max-h-10 mr-3 rounded-md"
                       />
                       <div>
                         <p className="font-semibold text-gray-800 truncate w-80">
                           {item.title}
                         </p>
+
                         <p className="text-sm text-gray-600">
                           {item.categorys}
                         </p>
@@ -115,7 +102,7 @@ const HeaderComponent = () => {
         </div>
 
         {/* Iconos de navegación */}
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-4 ">
           {pathname !== "/" && (
             <Link href="/">
               <HiOutlineHome
@@ -149,14 +136,14 @@ const HeaderComponent = () => {
                 />
               </Link>
               {productsIncart?.length > 0 && (
-                <div className="relative">
+                <div className="relative ">
                   <div onClick={() => setIsModalOpen(!isModalOpen)}>
                     <span className="absolute -top-[2px] -right-[3px]">
                       <FaCircle size={13} className="text-red-500" />
                     </span>
                     <p
                       style={{ fontSize: "8px" }}
-                      className="absolute -top-[1.31px] right-[0.4px] text-white"
+                      className="absolute  -top-[1.31px] right-[0.4px] text-white"
                     >
                       {productsIncart.length}
                     </p>
@@ -186,5 +173,15 @@ const HeaderComponent = () => {
     </header>
   );
 };
+
+const NavItem = ({ href, icon, text }) => (
+  <Link
+    href={href}
+    className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
+  >
+    {icon}
+    <span className="text-base font-medium">{text}</span>
+  </Link>
+);
 
 export default HeaderComponent;
