@@ -99,7 +99,7 @@ const ProductCard = () => {
     <div className="shadow-lg rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-x-hidden">
       {/* Swiper para imágenes */}
 
-      <div className="absolute top-[12%] right-1/2 sm:top-[15%] md:relative md:mt-72 ">
+      <div className="absolute top-[14%] right-1/2 sm:top-[15%] md:relative md:mt-72 ">
         <Swiper
           effect={"cube"}
           grabCursor={true}
@@ -131,7 +131,7 @@ const ProductCard = () => {
       </div>
 
       {/* Información del producto */}
-      <div className="flex flex-col pt-[115%] md:pt-0 md:ml-16">
+      <div className="flex flex-col pt-[117%] md:pt-0 md:ml-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
           {product?.title}
         </h2>
